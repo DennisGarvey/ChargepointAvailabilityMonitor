@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ChargePoint Station Status</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>🔌 ChargePoint Station Status</h1>
+  <div class="controls">
+    <span id="status"></span>
+    <pre id="error"></pre>
+  </div>
+  <div class="last-update"><span class="label">Last Updated:</span> <span id="lastUpdate">Never</span></div>
+  <table>
+    <thead>
+      <tr>
+        <th>Station Name</th>
+        <th>Station ID</th>
+        <th>Port</th>
+        <th>Status</th>
+        <th>State</th>
+        <th>Model</th>
+        <th>Software Version</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <div class="footer">Client-side polling every 60s. Add stations via ?stations=123456,78910. </div>
+  <script src="app.js"></script>
+</body>
+</html>
