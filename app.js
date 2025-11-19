@@ -81,8 +81,37 @@ async function refresh(){
   statusEl.textContent = collected.length? '':'No data';
 }
 
+function initTheme(){
+  const stored = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  
+  if(stored){
+    document.documentElement.setAttribute('data-theme', stored);
+  } else if(prefersDark){
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+  
+  const toggle = document.getElementById('themeToggle');
+  if(toggle){
+    toggle.addEventListener('click', ()=>{
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  }
+  
+  // Listen for system theme changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if(!localStorage.getItem('theme')){
+      document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+    }
+  });
+}
+
 function init(){
   stations = parseStationsParam();
+  initTheme();
   refresh();
   setInterval(refresh, POLL_INTERVAL_MS);
 }
