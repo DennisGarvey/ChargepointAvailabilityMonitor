@@ -9,7 +9,10 @@
 <body>
   <h1>🔌 ChargePoint Station Status</h1>
   <div class="controls">
-    <span id="status"></span>
+    <div class="controls-row">
+      <span id="status"></span>
+      <button class="btn" id="openStationModal" type="button">Add / Change Stations</button>
+    </div>
     <pre id="error"></pre>
   </div>
   <div class="last-update"><span class="label">Last Updated:</span> <span id="lastUpdate">Never</span></div>
@@ -28,8 +31,23 @@
     <tbody id="tbody"></tbody>
   </table>
   <div class="footer">
-    <span>Polling every 60s. Add stations via ?stations=123456,78910.</span>
+    <span>Polling every 60s.</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌓</button>
+  </div>
+
+  <div class="modal-backdrop" id="stationModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="stationModalTitle">
+      <h2 id="stationModalTitle">Add Stations</h2>
+      <p class="modal-description">Enter ChargePoint station IDs separated by commas, spaces, or new lines.</p>
+      <form id="stationForm">
+        <label class="visually-hidden" for="stationInput">Station IDs</label>
+        <textarea id="stationInput" rows="3" placeholder="e.g. 123456, 789012"></textarea>
+        <div class="modal-actions">
+          <button type="button" class="btn ghost" id="cancelStationModal">Cancel</button>
+          <button type="submit" class="btn primary">Save</button>
+        </div>
+      </form>
+    </div>
   </div>
   <script src="app.js"></script>
 </body>

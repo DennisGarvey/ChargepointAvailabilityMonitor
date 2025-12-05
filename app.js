@@ -1,12 +1,18 @@
 const API_BASE = 'https://mc.chargepoint.com/map-prod/v3/station/info?deviceId=';
 const POLL_INTERVAL_MS = 60000;
 let stations = [];
+let modalIsOpen = false;
 
 function parseStationsParam(){
   const urlParams = new URLSearchParams(window.location.search);
   const raw = urlParams.get('stations');
   if(!raw) return [];
   return raw.split(/[;,\s]+/).filter(x=>/^\d+$/.test(x));
+}
+
+function parseStationInput(raw){
+  if(!raw) return [];
+  return raw.split(/[;,\s]+/).map(s=>s.trim()).filter(Boolean).filter(x=>/^\d+$/.test(x));
 }
 
 async function fetchStation(id){
@@ -67,7 +73,7 @@ async function refresh(){
   const errEl = document.getElementById('error');
   errEl.textContent='';
   statusEl.textContent='Loading…';
-  if(stations.length===0){ statusEl.textContent='Add ?stations=ID1,ID2'; return; }
+  if(stations.length===0){ statusEl.textContent='No stations configured.'; return; }
   const collected=[];
   for(const id of stations){
     try {
@@ -79,6 +85,67 @@ async function refresh(){
   }
   buildTable(collected);
   statusEl.textContent = collected.length? '':'No data';
+}
+
+function updateStations(newStations){
+  stations = newStations;
+  const url = new URL(window.location.href);
+  if(newStations.length){
+    url.searchParams.set('stations', newStations.join(','));
+  } else {
+    url.searchParams.delete('stations');
+  }
+  window.history.replaceState({}, '', url);
+  refresh();
+}
+
+function showStationModal(prefill){
+  const modal = document.getElementById('stationModal');
+  const input = document.getElementById('stationInput');
+  modal.classList.add('visible');
+  modal.setAttribute('aria-hidden', 'false');
+  modalIsOpen = true;
+  input.value = typeof prefill === 'string' ? prefill : stations.join(', ');
+  setTimeout(()=>input.focus(),0);
+}
+
+function hideStationModal(){
+  const modal = document.getElementById('stationModal');
+  modal.classList.remove('visible');
+  modal.setAttribute('aria-hidden', 'true');
+  modalIsOpen = false;
+}
+
+function attachModalHandlers(){
+  const openBtn = document.getElementById('openStationModal');
+  const cancelBtn = document.getElementById('cancelStationModal');
+  const modal = document.getElementById('stationModal');
+  const form = document.getElementById('stationForm');
+  const input = document.getElementById('stationInput');
+  const errEl = document.getElementById('error');
+
+  openBtn?.addEventListener('click', ()=> showStationModal());
+  cancelBtn?.addEventListener('click', hideStationModal);
+
+  modal?.addEventListener('click', (e)=>{
+    if(e.target === modal){ hideStationModal(); }
+  });
+
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape' && modalIsOpen){ hideStationModal(); }
+  });
+
+  form?.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const parsed = parseStationInput(input.value);
+    if(!parsed.length){
+      errEl.textContent = 'Please enter at least one numeric station ID.';
+      return;
+    }
+    errEl.textContent = '';
+    hideStationModal();
+    updateStations(parsed);
+  });
 }
 
 function initTheme(){
@@ -112,6 +179,12 @@ function initTheme(){
 function init(){
   stations = parseStationsParam();
   initTheme();
+  attachModalHandlers();
+  if(stations.length===0){
+    const statusEl = document.getElementById('status');
+    statusEl.textContent = 'No stations configured. Add stations to begin.';
+    showStationModal('');
+  }
   refresh();
   setInterval(refresh, POLL_INTERVAL_MS);
 }

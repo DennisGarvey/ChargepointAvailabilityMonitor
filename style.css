@@ -44,7 +44,8 @@
 
 body { font-family: system-ui, Arial, sans-serif; margin:20px; background:var(--bg-primary); color:var(--text-primary); transition: background-color 0.3s, color 0.3s; }
 h1 { text-align:center; margin:0 0 10px; color:var(--text-primary); }
-.controls { text-align:center; margin:10px 0 10px; }
+.controls { text-align:center; margin:10px 0 10px; display:flex; flex-direction:column; gap:8px; align-items:center; }
+.controls-row { display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; }
 .last-update { text-align:center; font-size:14px; margin:0 0 15px; color:var(--text-secondary); }
 .last-update .label { font-weight:600; }
 table { width:100%; max-width:1200px; margin:0 auto; border-collapse:collapse; background:var(--bg-secondary); box-shadow:0 2px 4px var(--shadow); }
@@ -64,4 +65,18 @@ td { padding:10px; border-bottom:1px solid var(--border-color); color:var(--text
 .theme-toggle { background:var(--bg-secondary); border:1px solid var(--border-color); padding:6px 12px; border-radius:6px; cursor:pointer; color:var(--text-primary); font-size:11px; transition: all 0.2s; }
 .theme-toggle:hover { background:var(--hover-bg); }
 .mono { font-family:monospace; }
+.btn { background:var(--bg-secondary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:6px; padding:7px 12px; cursor:pointer; font-size:12px; transition: all 0.2s ease; }
+.btn:hover { background:var(--hover-bg); }
+.btn.primary { background:#2e7d32; color:#fff; border-color:#2e7d32; box-shadow:0 2px 6px rgba(46,125,50,0.3); }
+.btn.primary:hover { background:#256628; }
+.btn.ghost { background:transparent; color:var(--text-secondary); }
+.modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.2s ease; padding:20px; }
+.modal-backdrop.visible { opacity:1; pointer-events:auto; }
+.modal { background:var(--bg-secondary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:10px; box-shadow:0 10px 30px var(--shadow); max-width:420px; width:100%; padding:20px; box-sizing:border-box; }
+.modal h2 { margin:0 0 8px; font-size:18px; }
+.modal-description { margin:0 0 12px; color:var(--text-secondary); font-size:13px; }
+.modal textarea { width:100%; max-width:100%; border:1px solid var(--border-color); border-radius:8px; padding:10px; background:var(--bg-primary); color:var(--text-primary); font-family:monospace; resize:vertical; min-height:60px; box-sizing:border-box; }
+.modal textarea:focus { outline:2px solid #2e7d32; outline-offset:1px; }
+.modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:12px; }
+.visually-hidden { position:absolute; height:1px; width:1px; overflow:hidden; clip:rect(1px, 1px, 1px, 1px); white-space:nowrap; }
 @media (max-width:800px){ td,th { font-size:11px; padding:6px; } }
